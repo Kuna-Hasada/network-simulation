@@ -268,19 +268,26 @@ export default function PixiStage({ onInspect }: PixiStageProps) {
       t: links.length ? index / links.length : 0,
     }))
 
-    const tick = (delta: number) => {
-      packetGraphics.clear()
-      packetGraphics.fill({ color: 0xf8fafc })
-      packetState.forEach((packet) => {
-        const from = nodeMap.get(packet.from)
-        const to = nodeMap.get(packet.to)
-        if (!from || !to) return
-        packet.t = (packet.t + delta * 0.0025) % 1
-        const x = from.x + (to.x - from.x) * packet.t
-        const y = from.y + (to.y - from.y) * packet.t
-        packetGraphics.circle(x, y, 4.5)
-      })
-    }
+    const tick = (ticker: any) => {
+  const delta = ticker.deltaTime
+
+  packetGraphics.clear()
+  packetGraphics.fill({ color: 0xf8fafc })
+
+  packetState.forEach((packet) => {
+    const from = nodeMap.get(packet.from)
+    const to = nodeMap.get(packet.to)
+    if (!from || !to) return
+
+    packet.t = (packet.t + delta * 0.0025) % 1
+
+    const x = from.x + (to.x - from.x) * packet.t
+    const y = from.y + (to.y - from.y) * packet.t
+
+    packetGraphics.circle(x, y, 4.5)
+  })
+}
+
 
     app.ticker.add(tick)
 
